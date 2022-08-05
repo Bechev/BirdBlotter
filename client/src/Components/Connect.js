@@ -27,7 +27,7 @@ class Connect extends Component {
           appName: "BirdBlotter", // Required
           infuraId: process.env.REACT_APP_INFURA_PROJECT_ID1, // Required
           rpc: "", // Optional if `infuraId` is provided; otherwise it's required
-          chainId: process.env.REACT_APP_RINKEBY_NETWORK, // Optional. It defaults to 1 if not provided
+          chainId: process.env.REACT_APP_MAINNET_NETWORK, // Optional. It defaults to 1 if not provided
           darkMode: false // Optional. Use dark theme, defaults to false
         }
       }
@@ -62,11 +62,11 @@ class Connect extends Component {
     this.deployedNetwork = birdblotter.networks[this.networkId];
     this.birdBlotterInstance = new this.web3.eth.Contract(
       birdblotter.abi,
-      parseInt(process.env.REACT_APP_RINKEBY_NETWORK) && process.env.REACT_APP_RINKEBY_CONTRACT_ADDRESS
+      parseInt(process.env.REACT_APP_MAINNET_NETWORK) && process.env.REACT_APP_MAINNET_CONTRACT_ADDRESS
     )
     this.moonbirdsInstance = new this.web3.eth.Contract(
       moonbirds.abi,
-      parseInt(process.env.REACT_APP_RINKEBY_NETWORK) && process.env.REACT_APP_RINKEBY_MOONBIRD_ADDRESS
+      parseInt(process.env.REACT_APP_MAINNET_NETWORK) && process.env.REACT_APP_MAINNET_MOONBIRD_ADDRESS
     )
     this.context.updateAccountInfo({birdBlotterInstance: this.birdBlotterInstance, moonbirdsInstance: this.moonbirdsInstance})
     this.getMintInfo();
@@ -96,14 +96,14 @@ class Connect extends Component {
   }
 
   async getAccountsData(){
-    if(this.context.networkId === parseInt(process.env.REACT_APP_RINKEBY_NETWORK) ){
+    if(this.context.networkId === parseInt(process.env.REACT_APP_MAINNET_NETWORK) ){
       this.context.updateAccountInfo({walletETHBalance: await this.web3.eth.getBalance(this.context.account)});
       this.context.updateAccountInfo({dropOpened: await this.birdBlotterInstance.methods._mintOpened().call()})
     }
   }
 
   async getMintInfo(){
-    if(this.context.networkId === parseInt(process.env.REACT_APP_RINKEBY_NETWORK) ){
+    if(this.context.networkId === parseInt(process.env.REACT_APP_MAINNET_NETWORK) ){
       this.context.updateAccountInfo({mintPrice: parseFloat(await this.birdBlotterInstance.methods._ethPrice().call())})
     }
   }
@@ -126,8 +126,8 @@ class Connect extends Component {
 
   renderUserInterface(){
     if(!this.context.account){
-      // return null
-      return <Button variant="outline-light" onClick={() => this.connectWallet()}>Connect</Button>
+      return null
+      // return <Button variant="outline-light" onClick={() => this.connectWallet()}>Connect</Button>
     }else if(parseInt(this.context.networkId) !== parseInt(this.context.contractNetwork)){
       return <p style={{color: 'white'}}>Please connect to Ethereum Mainnet</p>
     }else return <Button variant="outline-light">Connected as {this.getAccountStr(this.context.account)}</Button>

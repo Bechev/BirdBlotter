@@ -1,4 +1,5 @@
-import React, {useState, useContext, useEffect} from "react";
+import React, {useState, useContext} from "react";
+import {useNavigate} from 'react-router-dom'
 import {Row, Col, Button, Spinner, Alert, Form, Container} from 'react-bootstrap'
 import { AccountInfoContext } from "../Context/AccountInfo";
 import logo from '../images/LOGO_background.png'
@@ -20,6 +21,7 @@ function ShippingInfo() {
     const [comments, setComments] = useState('')
     const [validated, setValidated] = useState(false);
     const [alert, setAlert] = useState({active: false, content: null, variant: null})
+    const navigate = useNavigate()
 
     function renderUserFeedback(){
         if(accountInfo.userFeedback){
@@ -34,46 +36,66 @@ function ShippingInfo() {
         }
     }
 
-    async function handleSubmit(event){
+    function displayAlert( message, variant){
+        setAlert({active: true, content: message, variant: variant})
+        setTimeout(function() { setAlert({active: false, content: null, variant: null}); }, 10000);
+    }
 
+    async function handleSubmit(event){
         const form = event.currentTarget;
         event.preventDefault();
-        // {console.log(await getWalletData(accountInfo.account))}
-
-        if(form.checkValidity()=== false){
+        let blotterOwner;
+        if(form.checkValidity() === false){
             event.stopPropagation();
         }else{
             accountInfo.updateAccountInfo({userFeedback: "Validating Moonbird ownership..."})
-            setAlert({active: true, content: `You are not the owner of moonbird ${moonbirdId}`, variant: "danger"})
-
-            let data = {
-                Wallet: accountInfo.account,
-                Name: encrypt(name),
-                Email: encrypt(email),
-                MoonbirdId: encrypt(moonbirdId),
-                Address1: encrypt(address1),
-                Address2: encrypt(address2),
-                City: encrypt(city),
-                State: encrypt(state),
-                Zip: encrypt(zip),
-                Country: encrypt(country),
-                Comments: encrypt(comments),
-                Shipped: 'false'
+            try{
+                blotterOwner = await accountInfo.birdBlotterInstance.methods.ownerOf(moonbirdId).call();
+            }catch(error){
+                displayAlert(error.message, 'warning')
             }
-            appendSpreadsheet(data)
-        }
-        setValidated(true);
-
-        if (form.checkValidity() === false) {
-            // console.log('hit')
-            event.preventDefault();
-            event.stopPropagation();
-
-        
+            if(blotterOwner === accountInfo.account){
+                displayAlert('Ownership confirmed!', 'success')
+                let data = {
+                    Wallet: accountInfo.account,
+                    Name: encrypt(name),
+                    Email: encrypt(email),
+                    MoonbirdId: encrypt(moonbirdId),
+                    Address1: encrypt(address1),
+                    Address2: encrypt(address2),
+                    City: encrypt(city),
+                    State: encrypt(state),
+                    Zip: encrypt(zip),
+                    Country: encrypt(country),
+                    Comments: encrypt(comments),
+                    Shipped: 'false'
+                }
+                try{
+                    accountInfo.updateAccountInfo({userFeedback: "redeeming blotter..."})
+                    await accountInfo.birdBlotterInstance.methods.redeemBlotter(moonbirdId).send({from: accountInfo.account});
+                    await appendSpreadsheet(data)
+                    navigate('/redeemSuccess');
+                }catch(error){
+                    displayAlert(error.message, 'warning')
+                }
+            }else{
+                displayAlert(`You are not the owner of BirdBlotter ${moonbirdId}, please try again. If this is an error, please contact us at hello@birdblotter.xyz`, 'warning')
+            }
+            accountInfo.updateAccountInfo({userFeedback: null})
             
         }
-        // setValidated(form.checkValidity());
-        // console.log(event)
+            // setValidated(true);
+
+            // if (form.checkValidity() === false) {
+            //     // console.log('hit')
+            //     event.preventDefault();
+            //     event.stopPropagation();
+
+            
+                
+            // }
+            // // setValidated(form.checkValidity());
+            // // console.log(event)
     }
 
     function renderShippingForm(){

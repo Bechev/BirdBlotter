@@ -1,7 +1,7 @@
 import React from "react";
 import { Container, Navbar, Nav} from "react-bootstrap";
 // import {useLocation} from 'react-router-dom'
-import logo from '../images/LOGO.png'
+import logo from '../images/banner_logo.png'
 import twitter_logo from '../images/twitter_logo.png'
 // import { AccountInfoContext } from "../Context/AccountInfo";
 import Connect from "./Connect.js";
@@ -20,8 +20,7 @@ export default function NavigationBar() {
           className="carousel_illustration d-block"
           src={logo}
           alt="birdblotter_logo"
-          width="31" // 0.7825x the heigh
-          height="40" 
+          width="150"
         />
         </Navbar.Brand>
         <Navbar.Text>
@@ -37,6 +36,7 @@ export default function NavigationBar() {
           {/* <Nav.Link href="/">Home</Nav.Link> */}
             <Nav.Link href="/mint">Mint</Nav.Link>
             <Nav.Link href="/redeem">Redeem</Nav.Link>
+            <Nav.Link href="/about">About</Nav.Link>
           </Nav>
           <Connect/>
         </Navbar.Collapse>

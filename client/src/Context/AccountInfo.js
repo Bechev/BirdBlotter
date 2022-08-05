@@ -4,14 +4,14 @@ export const AccountInfoContext = createContext();
 
 class AccountInfoProvider extends Component {
     state = {
-        MoonbirdAddress: process.env.REACT_APP_RINKEBY_MOONBIRD_ADDRESS,
-        birdblotterAddress: process.env.REACT_APP_RINKEBY_CONTRACT_ADDRESS,
+        MoonbirdAddress: process.env.REACT_APP_MAINNET_MOONBIRD_ADDRESS,
+        birdblotterAddress: process.env.REACT_APP_MAINNET_CONTRACT_ADDRESS,
         birdblotterInstance: null,
         account: null,
         networkId: null,
         transactionInProgress: false,
         userFeedback: null,
-        contractNetwork: process.env.REACT_APP_RINKEBY_NETWORK,
+        contractNetwork: process.env.REACT_APP_MAINNET_NETWORK,
         walletETHBalance: 0,
         mintPrice: 0,
         signedMessage: null,

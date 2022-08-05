@@ -7,16 +7,17 @@ const SHEET_ID = process.env.REACT_APP_SHEET_ID;
 const LOOKUP_SHEET_ID = process.env.REACT_APP_LOOKUP_SHEET_ID
 const CLIENT_EMAIL = process.env.REACT_APP_GOOGLE_CLIENT_EMAIL;
 const PRIVATE_KEY = process.env.REACT_APP_GOOGLE_SERVICE_PRIVATE_KEY;
+const ENCRYPTION_KEY = process.env.REACT_APP_ENCRYPTION_KEY
 
 const doc = new GoogleSpreadsheet(SPREADSHEET_ID);
 
 export const encrypt = (data) => {
-    var encryptedData = AES.encrypt(data.toLowerCase(), 'secret key 123').toString();
+    var encryptedData = AES.encrypt(data.toLowerCase(), process.env.REACT_APP_ENCRYPTION_KEY).toString();
     return encryptedData;
 }
 
 export const decrypt = (data) => {
-    var bytes = AES.decrypt(data, 'secret key 123');
+    var bytes = AES.decrypt(data, process.env.REACT_APP_ENCRYPTION_KEY);
     var originalText = bytes.toString(Utf8);
     return originalText;
 }

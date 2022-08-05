@@ -28,6 +28,10 @@ html, body{
   letter-spacing: 0.05rem;
 }
 
+.pixeboy{
+  font-family: "Pixeboy";
+}
+
 .navbar{
   font-family: "Rubik", sans-serif;
   font-weight: 400;
@@ -45,18 +49,36 @@ html, body{
   font-weight: 500;
  }
 
+ .white_border{
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    border: 2px solid #ffffff;
+    margin: 5px;
+  }
+
+  .link{
+    color: white !important;
+    /* text-decoration: underline !important; */
+    /* text-align: left !important; */
+  }
+
  .choice{
   font-size: 2.5vw;
   /* font-weight: bold; */
  }
 
+ .home_container{
+  width: 65vw !important;
+ }
+
+ .home_title{
+  font-size: 2vw;
+ }
+
 .figure_image{
   margin-bottom: 0;
 }
-
- #visual_choice{
-  font-size: 1.2vw;
- }
 
  .background{
   /* min-height: 70vh; */
@@ -223,6 +245,12 @@ html, body{
 }
 
 @media screen and (max-width: 650px) {
+
+  .home_container{
+    width: 100%;
+    font-size: 4vw;
+  }
+
   .carousel{
     max-height: 75vh;
     max-width: 75vw;
@@ -236,6 +264,11 @@ html, body{
   .about_graphic{
     max-width: 80vw;
     /* margin-left: -10vw; */
+  }
+
+  .home_title{
+    font-size: 1.5rem;
+    /* white-space: normal; */
   }
 
 } 
